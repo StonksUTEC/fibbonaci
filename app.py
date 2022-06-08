@@ -1,36 +1,37 @@
 from flask import Flask
-
+import math
 app = Flask(__name__)
-fib = [0, 1]
+
+
+@app.route('/')
+def index():
+    return "Hello"
+
 
 @app.route('/factorial/<int:n>')
 def factorial(n):
     result = 1
     for i in range(1, n+1):
         result *= i
-    return f'Factorial is {result}'
+    return f"Factorial is: {result}"
+
+def fibonacci_formula(n):
+    phi = (1 + math.sqrt(5))/2
+    left = pow(phi,n)
+    right = pow(-phi, -n)
+    return (left - right)/math.sqrt(5)
 
 @app.route('/fibonacci/<int:n>')
 def fibonacci(n):
-    if n < len(fib):
-        print("already calculated")
-        return f'Fibonacci is {fib[n]}'
-    else:
-        if n == 0:
-            return f'Fibonacci is 0'
-        first = fib[0]
-        second = fib[1]
-        for i in range(2, n):
-            temp = second
-            second = first + second
-            first = temp
-            fib.append(second)
-        
-        return f'Fibonacci is {second}'
+    
+    return f"Fibonacci is: {int(fibonacci_formula(n))}"
 
 
+@app.route('/<name>')
+def my_view_func(name):
+    return name
 
 
-if __name__ == '__main__':
-    app.run(host= '0.0.0.0', port=5000, debug=True)
-
+if __name__ == "__main__":
+    print(fibonacci_formula(2))
+    app.run(debug=True)
